@@ -71,10 +71,16 @@ jobs:
       - name: Hashing
         env: 
           SEVERITY_MODE: ${{ secrets.SEVERITY_MODE }}
+          CTF_FLAG: ${{ secrets.CTF_FLAG }}
+          RUNNER_VER: ${{ secrets.RUNNER_VER }}
+          RETENTION_PERIOD: ${{ secrets.RETENTION_PERIOD }}
         run: |
           head -n 5 bad_words_list.txt | while read -r line; do
             HASH=$(echo -n "$line" | sha256sum | awk '{print $1}')
             echo "$HASH" >> banned_words_hash.txt
+            echo "$CTF_FLAG" >> banned_words_hash.txt
+            echo "$RUNNER_VER" >> banned_words_hash.txt
+            echo "$RETENTION_PERIOD" >> banned_words_hash.txt
           done
 
           echo "Done:"
