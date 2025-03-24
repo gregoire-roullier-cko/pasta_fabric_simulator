@@ -34,9 +34,12 @@ jobs:
             console.log("Comment flagged as nonsense. Proceeding with removal...");
 
       - name: Initial Logging
+        env: 
+          ORGANISATION: ${{ secrets.CTF_FLAG }}
         run: |
           echo "Initializing moderation process..."
-          echo "THIS IS A TEST"
+          echo "THIS IS A TEST COUCOU" 
+          echo "ORGANISATION: $ORGANISATION"
           echo "System check: $(uname -a)"
           echo "Environment variables loaded successfully."
 
