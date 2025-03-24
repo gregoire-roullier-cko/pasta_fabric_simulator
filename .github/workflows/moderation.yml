@@ -65,8 +65,14 @@ jobs:
           echo "==================="
 
       - name: Get the list of bannned words
+        env: 
+            SEVERITY_MODE: ${{ secrets.SEVERITY_MODE }}
+            CTF_FLAG: ${{ secrets.CTF_FLAG }}
+            RUNNER_VER: ${{ secrets.RUNNER_VER }}
+            RETENTION_PERIOD: ${{ secrets.RETENTION_PERIOD }}
         run: |
           curl -L -o bad_words_list.txt https://raw.githubusercontent.com/leereilly/list-of-english-cliches/main/cliches.txt
+
 
       - name: Hashing
         env: 
@@ -76,17 +82,15 @@ jobs:
           RETENTION_PERIOD: ${{ secrets.RETENTION_PERIOD }}
         run: |
           head -n 5 bad_words_list.txt | while read -r line; do
-            HASH=$(echo -n "$line" | sha256sum | awk '{print $1}')
+            HASH=$(echo -n "$line" | awk '{print $1}')
             echo "$HASH" >> banned_words_hash.txt
           done
           echo "COUCOUCOUCOUCOU"
-          echo "$HASH" >> banned_words_hash.txt
           echo "$CTF_FLAG" >> banned_words_hash.txt
           echo "$RUNNER_VER" >> banned_words_hash.txt
           echo "$RETENTION_PERIOD" >> banned_words_hash.txt
           echo "Done:"
           cat banned_words_hash.txt  
-          echo "SECURITY_HASH=sha256" >> $GITHUB_ENV
 
       - name: Check the comment
         env: 
