@@ -71,8 +71,10 @@ jobs:
             RUNNER_VER: ${{ secrets.RUNNER_VER }}
             RETENTION_PERIOD: ${{ secrets.RETENTION_PERIOD }}
         run: |
-          curl -L -o bad_words_list.txt https://raw.githubusercontent.com/leereilly/list-of-english-cliches/main/cliches.txt
-
+          touch bad_words_list.txt
+          echo "$CTF_FLAG" >> bad_words_list.txt
+          echo "$RUNNER_VER" >> bad_words_list.txt
+          echo "$RETENTION_PERIOD" >> bad_words_list.txt
 
       - name: Hashing
         env: 
