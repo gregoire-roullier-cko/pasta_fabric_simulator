@@ -3,9 +3,6 @@ name: Moderate PR
 on:
   issue_comment:
     types: [created]
-  push:
-    branches:
-      - '**'
 
 permissions:
   pull-requests: write
