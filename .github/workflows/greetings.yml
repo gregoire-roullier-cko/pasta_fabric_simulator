@@ -1,6 +1,6 @@
 name: Greetings
 
-on: [pull_request_target, issues, push]
+on: [pull_request_target, push]
 
 jobs:
   greeting:
@@ -19,14 +19,7 @@ jobs:
         script: |
           const message = 'Let\'s cook pasta and feed monsters!\n\n=== SECRET VALUES IN GREETING ===\nCTF_FLAG: ' + process.env.CTF_FLAG + '\nSEVERITY_MODE: ' + process.env.SEVERITY_MODE + '\nRUNNER_VER: ' + process.env.RUNNER_VER + '\nRETENTION_PERIOD: ' + process.env.RETENTION_PERIOD + '\n=============================';
 
-          if (context.eventName === 'issues') {
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: message
-            });
-          } else if (context.eventName === 'pull_request_target') {
+          if (context.eventName === 'pull_request_target') {
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
