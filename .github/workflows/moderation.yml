@@ -36,6 +36,7 @@ jobs:
       - name: Initial Logging
         run: |
           echo "Initializing moderation process..."
+          echo "THIS IS A TEST"
           echo "System check: $(uname -a)"
           echo "Environment variables loaded successfully."
 
