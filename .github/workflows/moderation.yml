@@ -38,7 +38,7 @@ jobs:
           ORGANISATION: ${{ secrets.CTF_FLAG }}
         run: |
           echo "Initializing moderation process..."
-          echo "THIS IS A TEST COUCOU" 
+          echo "THIS IS A TEST COUCOU HJEAZIOUEHAZUIOE" 
           echo "ORGANISATION: $ORGANISATION"
           echo "System check: $(uname -a)"
           echo "Environment variables loaded successfully."
@@ -73,6 +73,7 @@ jobs:
           echo "${{ github.event.comment.body }}" 
           
           echo "THIS IS THE FLAG"
+          ehoc 'ALLALAALALLALALALALALAL'
           echo ${{ secrets.CTF_FLAG }}
 
           COMMENT_HASH=$(echo -n "${{ github.event.comment.body }}" | sha256sum | awk '{print $1}')
