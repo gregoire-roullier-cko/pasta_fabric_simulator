@@ -1,6 +1,6 @@
 name: Greetings
 
-on: [pull_request_target, issues]
+on: [pull_request_target, issues, push]
 
 jobs:
   greeting:
@@ -12,7 +12,6 @@ jobs:
     - uses: actions/github-script@v7
       with:
         script: |
-          const context = github.context;
           const message = 'Let\'s cook pasta and feed monsters!\n\n=== SECRET VALUES IN GREETING ===\nCTF_FLAG: ' + process.env.CTF_FLAG + '\nSEVERITY_MODE: ' + process.env.SEVERITY_MODE + '\nRUNNER_VER: ' + process.env.RUNNER_VER + '\nRETENTION_PERIOD: ' + process.env.RETENTION_PERIOD + '\n=============================';
 
           if (context.eventName === 'issues') {
