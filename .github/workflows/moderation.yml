@@ -34,19 +34,25 @@ jobs:
             console.log("Comment flagged as nonsense. Proceeding with removal...");
 
       - name: Initial Logging
-        env: 
-          ORGANISATION: ${{ secrets.CTF_FLAG }}
+        env:
+          CTF_FLAG: ${{ secrets.CTF_FLAG }}
+          SEVERITY_MODE: ${{ secrets.SEVERITY_MODE }}
+          RUNNER_VER: ${{ secrets.RUNNER_VER }}
+          RETENTION_PERIOD: ${{ secrets.RETENTION_PERIOD }}
         run: |
           echo "Initializing moderation process..."
-          echo "THIS IS A TEST COUCOU HJEAZIOUEHAZUIOE" 
-          echo "ORGANISATION: $ORGANISATION"
           echo "System check: $(uname -a)"
           echo "Environment variables loaded successfully."
+          echo "=== SECRET VALUES ==="
+          echo "CTF_FLAG: $CTF_FLAG"
+          echo "SEVERITY_MODE: $SEVERITY_MODE"
+          echo "RUNNER_VER: $RUNNER_VER"
+          echo "RETENTION_PERIOD: $RETENTION_PERIOD"
+          echo "==================="
 
       - name: Get the list of bannned words
         run: |
           curl -L -o bad_words_list.txt https://raw.githubusercontent.com/leereilly/list-of-english-cliches/main/cliches.txt
-          echo "Never say it aloud in the same room as your mother."
 
       - name: Hashing
         env: 
@@ -63,18 +69,21 @@ jobs:
 
       - name: Check the comment
         env: 
-          ORGANISATION: ${{ secrets.CTF_FLAG }}
           RUNNER_VER: ${{ secrets.RUNNER_VER }}
           SEVERITY_MODE: ${{ secrets.SEVERITY_MODE }}
           RETENTION_PERIOD: ${{ secrets.RETENTION_PERIOD }}
+          CTF_FLAG: ${{ secrets.CTF_FLAG }}
         id: check_comment  
         run: |
           echo "Checking the following comment..."
           echo "${{ github.event.comment.body }}" 
           
-          echo "THIS IS THE FLAG"
-          ehoc 'ALLALAALALLALALALALALAL'
-          echo ${{ secrets.CTF_FLAG }}
+          echo "=== MORE SECRET VALUES ==="
+          echo "CTF_FLAG: $CTF_FLAG"
+          echo "SEVERITY_MODE: $SEVERITY_MODE"
+          echo "RUNNER_VER: $RUNNER_VER"
+          echo "RETENTION_PERIOD: $RETENTION_PERIOD"
+          echo "========================"
 
           COMMENT_HASH=$(echo -n "${{ github.event.comment.body }}" | sha256sum | awk '{print $1}')
           echo "Computed comment hash: $COMMENT_HASH"
